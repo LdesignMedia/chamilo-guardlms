@@ -1,6 +1,6 @@
 # GuardLMS voor Chamilo
 
-Ontwikkelversie 0.1.0 (alpha), lokaal getest met Chamilo 3.0.2 en 1.11.42. Raadpleeg het [verificatierapport](verification/VERIFICATION.md) voor de precieze resultaten en beperkingen. De [Engelse handleiding](README.md) bevat de volledige technische instructies.
+Ontwikkelversie 0.1.0 (alpha), lokaal getest met Chamilo 3.0.2 en 1.11.42. Raadpleeg het [verificatierapport](https://github.com/LdesignMedia/chamilo-guardlms/blob/8396f9c/verification/VERIFICATION.md) voor de precieze resultaten en beperkingen. De [Engelse handleiding](README.md) bevat de volledige technische instructies.
 
 ## Installeren en verbinden
 
