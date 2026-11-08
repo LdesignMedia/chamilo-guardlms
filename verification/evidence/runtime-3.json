@@ -1,0 +1,86 @@
+{
+    "siteurl": "https://chamilo3.test:18616",
+    "chamilo": {
+        "version": "3.0.2",
+        "plugins": [
+            {
+                "id": "guardlms",
+                "version": "0.1.0",
+                "enabled": true
+            }
+        ]
+    },
+    "php": {
+        "version": "8.3.36",
+        "extensions": [
+            "Core",
+            "date",
+            "libxml",
+            "openssl",
+            "pcre",
+            "sqlite3",
+            "zlib",
+            "ctype",
+            "curl",
+            "dom",
+            "fileinfo",
+            "filter",
+            "hash",
+            "iconv",
+            "json",
+            "mbstring",
+            "SPL",
+            "session",
+            "PDO",
+            "pdo_sqlite",
+            "standard",
+            "posix",
+            "random",
+            "readline",
+            "Reflection",
+            "Phar",
+            "SimpleXML",
+            "tokenizer",
+            "xml",
+            "xmlreader",
+            "xmlwriter",
+            "mysqlnd",
+            "bcmath",
+            "exif",
+            "gd",
+            "intl",
+            "ldap",
+            "mysqli",
+            "pdo_mysql",
+            "soap",
+            "sodium",
+            "xsl",
+            "zip",
+            "Zend OPcache"
+        ]
+    },
+    "database": {
+        "type": "MariaDB",
+        "version": "11.4.13-MariaDB-ubu2404"
+    },
+    "server": {
+        "os_family": "Linux",
+        "arch": "aarch64",
+        "os_id": "debian",
+        "os_name": "Debian GNU/Linux",
+        "os_version": "13",
+        "os_pretty": "Debian GNU/Linux 13 (trixie)"
+    },
+    "security_config": {
+        "mfa_available": true,
+        "mfa_enabled": false,
+        "login_max_attempts": 0,
+        "reset_token_lifetime": 3600,
+        "cookie_secure": true,
+        "cookie_httponly": true,
+        "cookie_samesite": "Lax"
+    },
+    "dependency_counts": {
+        "composer": 340
+    }
+}

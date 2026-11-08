@@ -1,0 +1,2 @@
+PASS Chamilo 1 real native access registry selection, storage/settings/disconnect isolation and unregistered URL refusal
+PASS Chamilo 3 real native access registry selection, storage/settings/disconnect isolation and unregistered URL refusal

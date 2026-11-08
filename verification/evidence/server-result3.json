@@ -1,0 +1,14 @@
+{
+  "major": "3",
+  "checks": [
+    "warning preserves application response",
+    "controlled native warning executed",
+    "controlled native fatal executed",
+    "controlled native sql executed",
+    "server reporting opt-out saved",
+    "server opt-out stops actual delivery",
+    "anonymous settings refused",
+    "native student login",
+    "non-administrator settings refused"
+  ]
+}

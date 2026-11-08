@@ -2,7 +2,7 @@
 
 Connect a self-hosted Chamilo site to [GuardLMS](https://guardlms.com) for software inventory, vulnerability monitoring and opt-in configuration checks and error monitoring.
 
-**Development alpha 0.1.0.** Compatibility targets are Chamilo **3.0.2 / PHP 8.3** and **1.11.42 / PHP 7.4**. The verification report records actual results; do not assume untested releases work.
+**Development alpha 0.1.0.** Compatibility targets are Chamilo **3.0.2 / PHP 8.3** and **1.11.42 / PHP 7.4**. The [verification report](verification/VERIFICATION.md) records actual results; do not assume untested releases work.
 
 ## Features
 
@@ -37,7 +37,7 @@ Run as the same service account that owns private storage:
 17 * * * * www-data /usr/local/bin/php /path/to/chamilo/public/plugin/guardlms/cli/report.php --due
 ```
 
-Use `/path/to/chamilo/plugin/guardlms/cli/report.php` on 1.11. The hourly invocation sends only when the previous accepted report is at least a day old. `--preview` prints inventory without sending; omitting `--due` sends immediately. Concurrent jobs cannot overlap. Failed requests preserve the last accepted reporting time.
+Use `/path/to/chamilo/plugin/guardlms/cli/report.php` on 1.11. The hourly invocation sends only when the previous accepted report is at least a day old. `--preview` prints inventory without sending; omitting `--due` sends immediately. For multiple access URLs, schedule one invocation per connected URL with `--site=https://registered-portal.example`. Only active native registry entries are accepted. Selected secondary URLs report their own plugin enabled state and encrypted credentials; native security settings whose portal context cannot be established in CLI are omitted. Send a manual web report to refresh those observations. Concurrent jobs cannot overlap. Failed requests preserve the last accepted reporting time.
 
 ## Optional monitoring
 
@@ -80,6 +80,6 @@ find . -name '*.php' -not -path './vendor/*' -exec php -l {} \;
 scripts/package.sh
 ```
 
-The GuardLMS repository owns the real-runtime Docker/browser harness under `integrations/chamilo/docker`. See its README and verification report for exact runtimes, commands, completed checks and known gaps.
+The private GuardLMS repository owns the real-runtime Docker/browser harness under `integrations/chamilo/docker`. See its README and verification report for exact runtimes, commands, completed checks and known gaps.
 
 Licensed under GNU GPL v3 or later.

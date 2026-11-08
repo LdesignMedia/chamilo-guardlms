@@ -1,0 +1,100 @@
+{
+  "major": "3",
+  "delivered": [
+    {
+      "path": "/api/sdk/analytics/collect",
+      "status": 200
+    },
+    {
+      "path": "/api/sdk/errors/collect",
+      "status": 200
+    },
+    {
+      "path": "/api/sdk/analytics/collect",
+      "status": 200
+    },
+    {
+      "path": "/api/sdk/analytics/collect",
+      "status": 200
+    },
+    {
+      "path": "/api/sdk/analytics/collect",
+      "status": 200
+    }
+  ],
+  "analyticsEvents": [
+    {
+      "type": "pageview",
+      "page": "https://chamilo3.test:18616/"
+    },
+    {
+      "type": "web_vital",
+      "page": "https://chamilo3.test:18616/"
+    },
+    {
+      "type": "web_vital",
+      "page": "https://chamilo3.test:18616/"
+    },
+    {
+      "type": "web_vital",
+      "page": "https://chamilo3.test:18616/"
+    },
+    {
+      "type": "click",
+      "page": "https://chamilo3.test:18616/"
+    },
+    {
+      "type": "page_exit",
+      "page": "https://chamilo3.test:18616/"
+    },
+    {
+      "type": "pageview",
+      "page": "https://chamilo3.test:18616/admin"
+    },
+    {
+      "type": "pageview",
+      "page": "https://chamilo3.test:18616/"
+    },
+    {
+      "type": "web_vital",
+      "page": "https://chamilo3.test:18616/"
+    },
+    {
+      "type": "web_vital",
+      "page": "https://chamilo3.test:18616/"
+    },
+    {
+      "type": "web_vital",
+      "page": "https://chamilo3.test:18616/"
+    },
+    {
+      "type": "web_vital",
+      "page": "https://chamilo3.test:18616/"
+    },
+    {
+      "type": "scroll_depth",
+      "page": "https://chamilo3.test:18616/home",
+      "depth": 100
+    },
+    {
+      "type": "page_exit",
+      "page": "https://chamilo3.test:18616/"
+    },
+    {
+      "type": "pageview",
+      "page": "https://chamilo3.test:18616/home"
+    },
+    {
+      "type": "web_vital",
+      "page": "https://chamilo3.test:18616/home"
+    },
+    {
+      "type": "heartbeat",
+      "page": "https://chamilo3.test:18616/home"
+    }
+  ],
+  "persisted": {
+    "scroll_events": 1
+  },
+  "errors": []
+}

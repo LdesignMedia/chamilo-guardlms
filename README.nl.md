@@ -1,6 +1,6 @@
 # GuardLMS voor Chamilo
 
-Ontwikkelversie 0.1.0 (alpha), lokaal getest met Chamilo 3.0.2 en 1.11.42. Raadpleeg het [verificatierapport](https://github.com/LdesignMedia/guardlms/tree/main/integrations/chamilo) voor de precieze resultaten en beperkingen. De [Engelse handleiding](README.md) bevat de volledige technische instructies.
+Ontwikkelversie 0.1.0 (alpha), lokaal getest met Chamilo 3.0.2 en 1.11.42. Raadpleeg het [verificatierapport](verification/VERIFICATION.md) voor de precieze resultaten en beperkingen. De [Engelse handleiding](README.md) bevat de volledige technische instructies.
 
 ## Installeren en verbinden
 
@@ -10,7 +10,7 @@ Ontwikkelversie 0.1.0 (alpha), lokaal getest met Chamilo 3.0.2 en 1.11.42. Raadp
 4. Open `/plugin/guardlms/settings.php` als platformbeheerder. Bekijk de inventaris, kies **Verbinden met GuardLMS** en keur de verbinding in GuardLMS goed. Controleer daarna het tijdstip van de laatst geaccepteerde inventaris.
 5. Stel de dagelijkse rapportage in via de gedocumenteerde cronopdracht. Voer deze uit als dezelfde servicegebruiker die de privéopslag beheert. `--due` rapporteert pas wanneer de laatste geaccepteerde inventaris minstens een dag oud is.
 
-Elke canonieke toegangs-URL heeft eigen instellingen en sleutels. Verbind iedere URL afzonderlijk. Pas bij het klonen van een installatie de native Chamilo-URL aan; een afwijkende URL mag geen gegevens voor de oorspronkelijke website aanleveren.
+Elke canonieke toegangs-URL heeft eigen instellingen en sleutels. Verbind iedere URL afzonderlijk. Plan per URL een cronopdracht met `--site=https://geregistreerd-portaal.example`; niet-geregistreerde URLs worden geweigerd. Pas bij het klonen van een installatie de native Chamilo-URL aan; een afwijkende URL mag geen gegevens voor de oorspronkelijke website aanleveren.
 
 ## Optionele gegevens
 

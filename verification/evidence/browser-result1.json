@@ -1,0 +1,35 @@
+{
+  "major": "1",
+  "delivered": [
+    {
+      "path": "/api/sdk/errors/collect",
+      "status": 200
+    },
+    {
+      "path": "/api/sdk/analytics/collect",
+      "status": 200
+    }
+  ],
+  "analyticsEvents": [
+    {
+      "type": "pageview",
+      "page": "https://chamilo1.test:18617/"
+    },
+    {
+      "type": "web_vital",
+      "page": "https://chamilo1.test:18617/"
+    },
+    {
+      "type": "web_vital",
+      "page": "https://chamilo1.test:18617/"
+    },
+    {
+      "type": "web_vital",
+      "page": "https://chamilo1.test:18617/"
+    }
+  ],
+  "persisted": {
+    "scroll_events": 1
+  },
+  "errors": []
+}

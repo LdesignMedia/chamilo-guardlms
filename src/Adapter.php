@@ -5,8 +5,36 @@ namespace GuardLMS\Chamilo;
 /** Native runtime APIs; never substitute a directory scan for installed inventory. */
 class Adapter
 {
+    private $selectedUrl;
+    private $selectedId;
+
+    public function selectSite($site)
+    {
+        if (PHP_SAPI !== 'cli') {
+            throw new \RuntimeException('Access URL selection is CLI-only.');
+        }
+        $site = rtrim($site, '/');
+        if ($site === $this->site()) {
+            return $this;
+        }
+        foreach (api_get_access_urls() as $row) {
+            if (!empty($row['active']) && rtrim($row['url'], '/') === $site) {
+                $this->selectedUrl = $site;
+                $this->selectedId = (int) $row['id'];
+                if (!$this->modern()) {
+                    $GLOBALS['_configuration']['access_url'] = $this->selectedId;
+                }
+                return $this;
+            }
+        }
+        throw new \RuntimeException('Select an active URL registered in Chamilo access URL administration.');
+    }
+
     public function site()
     {
+        if ($this->selectedUrl !== null) {
+            return $this->selectedUrl;
+        }
         if (($this->modern() || (function_exists('api_is_multiple_url_enabled') && api_is_multiple_url_enabled())) && function_exists('api_get_access_url') && function_exists('api_get_current_access_url_id')) {
             $url = api_get_access_url(api_get_current_access_url_id());
             if (is_array($url) && !empty($url['url'])) {
@@ -66,7 +94,8 @@ class Adapter
             if ($this->modern()) {
                 $entity = \Chamilo\CoreBundle\Framework\Container::getPluginRepository()->findOneByTitle($name);
                 if ($entity) {
-                    $rel = $entity->getConfigurationsByAccessUrl(\Chamilo\CoreBundle\Framework\Container::getAccessUrlUtil()->getCurrent());
+                    $access = $this->selectedId ? \Chamilo\CoreBundle\Framework\Container::getAccessUrlRepository()->find($this->selectedId) : \Chamilo\CoreBundle\Framework\Container::getAccessUrlUtil()->getCurrent();
+                    $rel = $entity->getConfigurationsByAccessUrl($access);
                     $enabled = $rel ? (bool) $rel->isActive() : false;
                 }
             } elseif (method_exists($manager, 'getInstalledPluginsInCurrentUrl')) {
@@ -95,6 +124,10 @@ class Adapter
         $result = [];
         $map = $this->modern() ? ['mfa_enabled' => 'security.2fa_enable', 'login_max_attempts' => 'security.login_max_attempt_before_blocking_account', 'reset_token_lifetime' => 'security.user_reset_password_token_limit']
             : ['login_max_attempts' => 'login_max_attempt_before_blocking_account', 'reset_token_lifetime' => 'user_reset_password_token_limit'];
+        // A CLI-selected portal must not borrow the primary portal's native settings.
+        if ($this->selectedId) {
+            $map = [];
+        }
         foreach ($map as $key => $native) {
             $value = api_get_setting($native);
             if ($value === null || $value === '') {
@@ -114,7 +147,7 @@ class Adapter
         }
         // A UI strength meter does not establish server-side policy enforcement.
         // Leave password_policy unknown until an adapter can prove enforcement.
-        if (!$this->modern() && function_exists('api_get_configuration_value')) {
+        if (!$this->selectedId && !$this->modern() && function_exists('api_get_configuration_value')) {
             $limit = api_get_configuration_value('login_max_attempt_before_blocking_account');
             if (is_numeric($limit) && $limit >= 0) {
                 $result['login_max_attempts'] = (int) $limit;

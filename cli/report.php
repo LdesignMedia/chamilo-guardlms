@@ -7,7 +7,13 @@ if (PHP_SAPI !== 'cli') {
 require_once __DIR__.'/../../../main/inc/global.inc.php';
 require_once dirname(__DIR__).'/autoload.php';
 try {
-    $connector = new \GuardLMS\Chamilo\Connector();
+    $adapter = new \GuardLMS\Chamilo\Adapter();
+    foreach ($argv as $argument) {
+        if (strpos($argument, '--site=') === 0) {
+            $adapter->selectSite(substr($argument, 7));
+        }
+    }
+    $connector = new \GuardLMS\Chamilo\Connector($adapter);
     if (in_array('--preview', $argv, true)) {
         $result = $connector->adapter->inventory(!empty($connector->store->read()['config_enabled']));
     } else {

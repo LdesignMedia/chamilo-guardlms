@@ -1,0 +1,82 @@
+{
+    "siteurl": "https://chamilo1.test:18617",
+    "chamilo": {
+        "version": "1.11.42",
+        "plugins": [
+            {
+                "id": "guardlms",
+                "version": "0.1.0",
+                "enabled": true
+            }
+        ]
+    },
+    "php": {
+        "version": "7.4.33",
+        "extensions": [
+            "Core",
+            "date",
+            "libxml",
+            "openssl",
+            "pcre",
+            "sqlite3",
+            "zlib",
+            "ctype",
+            "curl",
+            "dom",
+            "fileinfo",
+            "filter",
+            "ftp",
+            "hash",
+            "iconv",
+            "json",
+            "mbstring",
+            "SPL",
+            "PDO",
+            "pdo_sqlite",
+            "session",
+            "posix",
+            "readline",
+            "Reflection",
+            "standard",
+            "SimpleXML",
+            "Phar",
+            "tokenizer",
+            "xml",
+            "xmlreader",
+            "xmlwriter",
+            "mysqlnd",
+            "bcmath",
+            "exif",
+            "gd",
+            "intl",
+            "ldap",
+            "mysqli",
+            "pdo_mysql",
+            "soap",
+            "sodium",
+            "xsl",
+            "zip"
+        ]
+    },
+    "database": {
+        "type": "MariaDB",
+        "version": "10.11.19-MariaDB-ubu2204"
+    },
+    "server": {
+        "os_family": "Linux",
+        "arch": "aarch64",
+        "os_id": "debian",
+        "os_name": "Debian GNU/Linux",
+        "os_version": "11",
+        "os_pretty": "Debian GNU/Linux 11 (bullseye)"
+    },
+    "security_config": {
+        "reset_token_lifetime": 3600,
+        "cookie_secure": true,
+        "cookie_httponly": true,
+        "cookie_samesite": "Lax"
+    },
+    "dependency_counts": {
+        "composer": 229
+    }
+}
