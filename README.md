@@ -66,7 +66,7 @@ Inventory includes the canonical site URL, software and selected environment met
 
 Back up the installation key and encrypted per-site settings together, with private permissions. Losing the installation key requires reconnecting; do not replace it on a live installation. The inventory credential never appears in payload preview or browser HTML. The browser SDK credential is intentionally public and scoped through GuardLMS's SDK controls.
 
-Disconnect attempts remote inventory/SDK credential revocation, then clears local credentials, pending callbacks, optional monitoring and queued events even if the network is unavailable. If remote revocation failed, revoke credentials in GuardLMS. Removing files alone does not revoke remote credentials.
+Disconnect attempts remote inventory/SDK credential revocation, then clears local credentials, pending callbacks, optional monitoring and queued events even if the network is unavailable. If remote revocation failed, revoke credentials in GuardLMS. Before deleting plugin files, disconnect and remove the `auto_prepend_file` configuration, then restart PHP. Leaving a prepend path pointing at a deleted file can prevent PHP requests from running. Removing files alone does not revoke remote credentials.
 
 The password strength-meter setting is not evidence of server-side enforcement, so password-policy enforcement remains unknown. MFA availability and policy coverage for external identity providers also remain unknown when native evidence is absent.
 
