@@ -1,0 +1,4 @@
+/dist/
+/vendor/
+*.log
+.env*
