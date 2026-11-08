@@ -57,6 +57,13 @@ try {
     verify(strpos($e->getMessage(), 'expired') !== false, 'expired callback refused before network exchange');
 }
 verify(!isset($_SESSION['guardlms_connect']) && $connector->store->read()['token'] === 'preserved-credential', 'expired state consumed without replacing a working credential');
+$connector->store->update(static function ($state) {
+    return ['token' => 'inventory-fixture', 'server_enabled' => true, 'sdk' => ['key' => 'public-fixture', 'enabled' => true, 'subscription_active' => true, 'allowed_domains_match' => true]];
+});
+$exception = new class ('learner@example.invalid password=private-test-secret') extends RuntimeException {};
+Monitor::exception($connector, $exception);
+$queued = json_encode($connector->store->read()['events']);
+verify(strpos($queued, 'private-test-secret') === false && strpos($queued, 'learner@example') === false && strpos($queued, __FILE__) === false, 'exception messages and anonymous-class source paths withheld');
 $lockfileAdapter = new class ($dir) extends GuardLMS\Chamilo\Adapter {
     private $root;
     public function __construct($root)

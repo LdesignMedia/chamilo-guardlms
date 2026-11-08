@@ -50,7 +50,7 @@ The production middleware/receiver regression tests additionally verify website-
 - Both backend suites reported the repository's **78 existing PHPUnit deprecations**; no test failures.
 - Browser SDK: **8 suites, 331 tests passed**, including same-URL Vue history updates, cross-origin credential-free keepalive transport, same-origin beacon authentication and hidden-document scroll delivery.
 - Frontend: **48 tests passed** across callback binding, connection UI and bilingual catalog; all three TypeScript configurations passed.
-- Connector: **15 checks passed on PHP 7.4 and host PHP 8.4**. All PHP files linted on PHP 7.4 and PHP 8.4. Backend Pint and connector PSR-12 formatting applied; shell syntax and Git whitespace checked.
+- Connector: **16 checks passed on PHP 7.4 and host PHP 8.4**. All PHP files linted on PHP 7.4 and PHP 8.4. Backend Pint and connector PSR-12 formatting applied; shell syntax and Git whitespace checked.
 - ZIP: one top-level `guardlms/` directory; CRCs checked; source, English/Dutch instructions and license included; tests, Git/CI files and credentials excluded. CI builds the same ZIP on PHP 7.4/8.3/8.4.
 
 The shared SDK changes were required by real browser tests: Vue can replace history state without navigating, and cross-origin unload beacons conflict with the collector's deliberate cookie-free CORS policy. The receiver also accepts the existing JSON-body beacon key, with header precedence and malformed-key regression coverage. Built SDK distributions accompany the source.

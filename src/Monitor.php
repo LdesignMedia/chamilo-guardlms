@@ -51,9 +51,16 @@ final class Monitor
         $sql = $exception instanceof \PDOException || stripos(get_class($exception), 'DBAL') !== false || stripos(get_class($exception), 'SQL') !== false;
         $frames = [];
         foreach (array_slice($exception->getTrace(), 0, 20) as $frame) {
-            $frames[] = ($frame['class'] ?? '').($frame['type'] ?? '').($frame['function'] ?? '').' at '.basename($frame['file'] ?? 'internal').':'.(int) ($frame['line'] ?? 0);
+            $frames[] = self::symbol($frame['class'] ?? '').($frame['type'] ?? '').self::symbol($frame['function'] ?? '').' at '.basename($frame['file'] ?? 'internal').':'.(int) ($frame['line'] ?? 0);
         }
-        self::capture($connector, $exception->getMessage(), $exception->getFile(), $exception->getLine(), $sql ? 'sql' : 'php', get_class($exception), implode("\n", $frames));
+        self::capture($connector, $exception->getMessage(), $exception->getFile(), $exception->getLine(), $sql ? 'sql' : 'php', self::symbol(get_class($exception)), implode("\n", $frames));
+    }
+
+    private static function symbol($name)
+    {
+        // Anonymous classes/closures can embed absolute source paths in runtime names.
+        $allowed = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_\\';
+        return strlen($name) <= 200 && strspn($name, $allowed) === strlen($name) ? $name : 'anonymous';
     }
 
     public static function redact($text)
