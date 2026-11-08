@@ -78,7 +78,7 @@ Sanitized evidence:
 - [Chamilo 1 runtime/inventory summary](evidence/runtime-1.json), [Chamilo 3 summary](evidence/runtime-3.json).
 - [Persisted inventory and scanner preservation](evidence/persisted-inventory.jsonl), [persisted monitoring counts](evidence/persisted-monitoring.jsonl).
 - [Chamilo 1 browser result](evidence/browser-result1.json), [Chamilo 3 browser result](evidence/browser-result3.json).
-- [Chamilo 1 server/access checks](evidence/server-result1.json), [Chamilo 3 server/access checks](evidence/server-result3.json), [real cron result](evidence/cron-result.json), [native access URL checks](evidence/access-urls.txt), [legacy two-host checks](evidence/multi-url-result1.json), [modern two-host checks](evidence/multi-url-result3.json), [failure-time preservation 1](evidence/failure-1.txt), [failure-time preservation 3](evidence/failure-3.txt), [ZIP digest](evidence/package.json).
+- [Chamilo 1 server/access checks](evidence/server-result1.json), [Chamilo 3 server/access checks](evidence/server-result3.json), [real cron result](evidence/cron-result.json), [native access URL checks](evidence/access-urls.txt), [legacy two-host checks](evidence/multi-url-result1.json), [modern two-host checks](evidence/multi-url-result3.json), [failure-time preservation 1](evidence/failure-1.txt), [failure-time preservation 3](evidence/failure-3.txt).
 
 ![Chamilo 1 connected administrator settings](evidence/chamilo-1-connected.png)
 
