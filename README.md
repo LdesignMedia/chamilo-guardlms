@@ -9,7 +9,7 @@ Connect a self-hosted Chamilo site to [GuardLMS](https://guardlms.com) for softw
 - Complete native installed-plugin inventory, Chamilo/PHP/database/OS metadata and locally available Composer/npm dependencies.
 - Connect, reconnect, disconnect, manual reporting, preview and daily CLI reporting.
 - Site-bound credentials encrypted with AES-256-GCM, isolated by canonical access URL.
-- Optional password/MFA/session/debug configuration observations and GuardLMS findings.
+- Optional MFA/session/debug configuration observations and GuardLMS findings.
 - Optional browser errors, page views and scroll analytics through the existing SDK.
 - Optional PHP/SQL error observations with private bounded delivery queues and conservative redaction.
 
@@ -23,11 +23,11 @@ Create private storage as the PHP service account, outside the document root:
 sudo install -d -m 0700 -o www-data -g www-data /var/lib/chamilo-guardlms
 ```
 
-Set `CHAMILO_GUARDLMS_DATA` in the PHP/CLI environment if using another private directory. Install and enable GuardLMS with Chamilo's native plugin manager. Assign the `header_main` and `pre_footer` regions. On Chamilo 3 rebuild the Composer autoloader and clear the application cache after installing so its native plugin subscriber discovery sees the new class. These are normal application deployment commands; no core source changes are required.
+Set `CHAMILO_GUARDLMS_DATA` in the PHP/CLI environment if using another private directory. Install and enable GuardLMS with Chamilo's native plugin manager. Assign `pre_footer` on Chamilo 3; its native response subscriber supplies the document-head integration. On Chamilo 1.11 assign both `header_main` and `pre_footer`. On Chamilo 3 rebuild the Composer autoloader and clear the application cache after installing so its native plugin subscriber discovery sees the new class. These are normal application deployment commands; no core source changes are required.
 
 Open `/plugin/guardlms/settings.php` as a platform administrator. Preview inventory, click **Connect to GuardLMS**, sign in and approve the site. The callback installs the keys and sends the initial inventory. Confirm **Last accepted inventory** before enabling optional features.
 
-Use the canonical access URL including any subdirectory. Different access URLs have separate encrypted settings and credentials. Connect each URL independently. Copying the site to another URL does not reuse its stored connection.
+Use the canonical access URL including any subdirectory. Different access URLs have separate encrypted settings and credentials. Connect each URL independently. Changing the configured canonical access URL selects separate connection storage; update the native URL configuration when cloning a site.
 
 ## Daily reports
 
@@ -56,9 +56,9 @@ CHAMILO_GUARDLMS_DATA=/var/lib/chamilo-guardlms
 
 Use the equivalent non-public plugin path on 1.11. Configure environment variables in the web service and cron environment; never derive the canonical URL from a request header. On multi-URL deployments configure the matching URL per vhost; otherwise early capture is deliberately skipped for unmatched hosts. Restart PHP after configuration changes.
 
-When server reporting is enabled, the prepend file routes native PHP/Chamilo diagnostics to a private per-site log. This allows importing handled Chamilo 1.11 SQL errors. Rotate these private logs through normal operations; they may contain sensitive unredacted application diagnostics locally. Only generic PHP/SQL messages, exception class, basename and line number are delivered. SQL statements, bound parameters, raw request data and exception arguments are withheld.
+When server reporting is enabled, the prepend file routes native PHP/Chamilo diagnostics to a private per-site log. This allows importing handled Chamilo 1.11 SQL errors. Rotate these private logs through normal operations; they may contain sensitive unredacted application diagnostics locally. Only generic PHP/SQL messages, exception class, basename, line number and argument-free stack frames are delivered. SQL statements, bound parameters, raw request data and exception arguments are withheld.
 
-Delivery is best effort and at least once: up to 20 events per batch, 100 queued records, two-second transport timeout, and retry through cron. Duplicate events can occur after interrupted acknowledgements. Hard process termination, errors before PHP can execute the prepend file, custom handlers that suppress diagnostics, and disabled native logging can prevent capture. Monitoring never enables public debug output or changes error responses.
+Delivery is best effort and at least once: up to 20 events per batch, 100 queued records, two-second web transport timeout (15 seconds in CLI), and retry through cron. Duplicate events can occur after interrupted acknowledgements. Hard process termination, errors before PHP can execute the prepend file, custom handlers that suppress diagnostics, and disabled native logging can prevent capture. Monitoring never enables public debug output or changes error responses.
 
 ## Privacy and credential lifecycle
 
@@ -67,6 +67,8 @@ Inventory includes the canonical site URL, software and selected environment met
 Back up the installation key and encrypted per-site settings together, with private permissions. Losing the installation key requires reconnecting; do not replace it on a live installation. The inventory credential never appears in payload preview or browser HTML. The browser SDK credential is intentionally public and scoped through GuardLMS's SDK controls.
 
 Disconnect attempts remote inventory/SDK credential revocation, then clears local credentials, pending callbacks, optional monitoring and queued events even if the network is unavailable. If remote revocation failed, revoke credentials in GuardLMS. Removing files alone does not revoke remote credentials.
+
+The password strength-meter setting is not evidence of server-side enforcement, so password-policy enforcement remains unknown. MFA availability and policy coverage for external identity providers also remain unknown when native evidence is absent.
 
 Chamilo plugin update availability remains unknown without an authoritative version source. Chamilo plugins never use Moodle's catalog identities. An enabled MFA setting does not prove enforcement for every account or external identity provider.
 
