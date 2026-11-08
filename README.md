@@ -2,7 +2,7 @@
 
 Connect a self-hosted Chamilo site to [GuardLMS](https://guardlms.com) for software inventory, vulnerability monitoring and opt-in configuration checks and error monitoring.
 
-**Development alpha 0.1.0.** Compatibility targets are Chamilo **3.0.2 / PHP 8.3** and **1.11.42 / PHP 7.4**. The [verification report](https://github.com/LdesignMedia/chamilo-guardlms/blob/8396f9c/verification/VERIFICATION.md) records actual results; do not assume untested releases work.
+**Development alpha 0.1.0.** Compatibility targets are Chamilo **3.0.2 / PHP 8.3** and **1.11.42 / PHP 7.4**. The [verification report](https://github.com/LdesignMedia/chamilo-guardlms/blob/6dc5128d0df09884d1e9a87c1726e3c27c5a1b17/verification/VERIFICATION.md) records actual results; do not assume untested releases work.
 
 ## Features
 
