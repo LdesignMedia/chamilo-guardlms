@@ -1,0 +1,20 @@
+{
+  "major": "1",
+  "primary": "https://chamilo1.test:18617",
+  "secondary": "https://chamilo3.test:18617",
+  "checks": [
+    "primary connection present before secondary consent",
+    "secondary sees centrally installed legacy plugin",
+    "native canonical secondary URL",
+    "secondary monitoring starts off",
+    "secondary actual consent and initial push",
+    "secondary consent preserves primary credentials/settings",
+    "secondary native PHP warning response preserved",
+    "CLI report selects secondary native URL and credential",
+    "secondary inventory and monitoring persisted",
+    "secondary disconnect preserves primary connection and monitoring settings",
+    "secondary disconnect stops SDK",
+    "primary SDK remains active after secondary disconnect",
+    "primary monitoring still accepted after secondary revocation"
+  ]
+}
