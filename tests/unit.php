@@ -57,6 +57,29 @@ try {
     verify(strpos($e->getMessage(), 'expired') !== false, 'expired callback refused before network exchange');
 }
 verify(!isset($_SESSION['guardlms_connect']) && $connector->store->read()['token'] === 'preserved-credential', 'expired state consumed without replacing a working credential');
+$lockfileAdapter = new class ($dir) extends GuardLMS\Chamilo\Adapter {
+    private $root;
+    public function __construct($root)
+    {
+        $this->root = $root;
+    }
+    public function codeRoot()
+    {
+        return $this->root;
+    }
+};
+verify($lockfileAdapter->dependencies() === null, 'missing dependency metadata stays unknown');
+file_put_contents($dir.'/composer.lock', json_encode(['packages' => [['name' => 'vendor/package', 'version' => '1.2.3']], 'packages-dev' => [['name' => 'vendor/tool', 'version' => '2.0']]]));
+file_put_contents($dir.'/package-lock.json', json_encode(['packages' => ['' => ['name' => 'site'], 'node_modules/tool' => ['version' => '1.0'], 'node_modules/a/node_modules/tool' => ['version' => '2.0', 'dev' => true], 'node_modules/unknown' => []]]));
+$dependencies = $lockfileAdapter->dependencies();
+verify(count($dependencies) === 4 && $dependencies[1]['dev'] === true, 'Composer dev metadata and nested npm versions retained without invented versions');
+file_put_contents($dir.'/package-lock.json', json_encode(['dependencies' => ['tool' => ['version' => '1.0', 'dependencies' => ['child' => ['version' => '2.0']]]]]));
+verify(count($lockfileAdapter->dependencies()) === 4, 'npm v1 nested dependency metadata');
+$lock = fopen($connector->store->path('.push.lock'), 'c');
+flock($lock, LOCK_EX);
+verify($connector->push() === ['skipped' => 'busy'], 'overlapping reporting is skipped before transport');
+flock($lock, LOCK_UN);
+fclose($lock);
 foreach (glob($dir.'/*') as $file) {
     unlink($file);
 } rmdir($dir);

@@ -188,15 +188,39 @@ class Adapter
                     }
                 }
             } else {
+                if (!isset($data['packages']) && isset($data['dependencies'])) {
+                    $this->npmDependencies($data['dependencies'], $rows);
+                }
                 foreach ($data['packages'] ?? [] as $path => $p) {
                     if ($path === '' || empty($p['version'])) {
                         continue;
                     }
                     $name = $p['name'] ?? preg_replace('~^.*node_modules/~', '', $path);
-                    $rows['npm:'.$name] = ['ecosystem' => 'npm', 'name' => $name, 'version' => $p['version'], 'dev' => !empty($p['dev'])];
+                    $rows['npm:'.$name.':'.$p['version']] = ['ecosystem' => 'npm', 'name' => $name, 'version' => $p['version'], 'dev' => !empty($p['dev'])];
                 }
             }
         }
         return $observed ? array_slice(array_values($rows), 0, 2000) : null;
     }
+    private function npmDependencies(array $dependencies, array &$rows, $depth = 0)
+    {
+        if ($depth > 30 || count($rows) >= 2000) {
+            return;
+        }
+        foreach ($dependencies as $name => $package) {
+            if (!is_array($package)) {
+                continue;
+            }
+            if (!empty($package['version'])) {
+                $rows['npm:'.$name.':'.$package['version']] = ['ecosystem' => 'npm', 'name' => $name, 'version' => $package['version'], 'dev' => !empty($package['dev'])];
+            }
+            if (!empty($package['dependencies']) && is_array($package['dependencies'])) {
+                $this->npmDependencies($package['dependencies'], $rows, $depth + 1);
+            }
+            if (count($rows) >= 2000) {
+                break;
+            }
+        }
+    }
+
 }
