@@ -11,7 +11,8 @@ final class Connector
     {
         $probe = $adapter ?: new Adapter();
         $this->adapter = $adapter ?: ($probe->modern() ? new ModernAdapter() : new LegacyAdapter());
-        $this->store = new State($this->adapter->site());
+        $publicRoot = function_exists('api_get_path') && defined('SYS_PATH') ? $this->adapter->root() : null;
+        $this->store = new State($this->adapter->site(), $publicRoot);
     }
 
     public function push($dueOnly = false)
@@ -30,6 +31,9 @@ final class Connector
             }
             $payload = $this->adapter->inventory(!empty($state['config_enabled']));
             $result = Http::post('/api/externalpush/chamilo', $payload, $state['token']);
+            if (!empty($result['data']['stale'])) {
+                throw new \RuntimeException('GuardLMS ignored an older inventory snapshot. Check the system clock and retry.');
+            }
             $this->store->update(static function ($current) use ($state) {
                 if (($current['token'] ?? null) === $state['token']) {
                     $current['last_accepted'] = time();
@@ -132,6 +136,26 @@ final class Connector
         });
         unset($_SESSION['guardlms_connect']);
         // Events are encrypted inside state and are discarded with it.
+    }
+
+    public function saveOptions(array $options)
+    {
+        $log = $this->store->path('.php-errors.log');
+        $this->store->update(static function ($state) use ($options, $log) {
+            $wasEnabled = !empty($state['server_enabled']);
+            foreach (['browser_enabled', 'analytics_enabled', 'server_enabled', 'config_enabled'] as $key) {
+                $state[$key] = !empty($options[$key]);
+            }
+            if (!$state['server_enabled'] || !$wasEnabled) {
+                unset($state['events']);
+                // Never replay diagnostics from an earlier consent period or the
+                // remainder of a request which disabled capture.
+                clearstatcache(true, $log);
+                $state['log_cursor'] = is_file($log) ? filesize($log) : 0;
+                $state['log_inode'] = is_file($log) ? fileinode($log) : null;
+            }
+            return $state;
+        });
     }
 
     public function active(array $state)

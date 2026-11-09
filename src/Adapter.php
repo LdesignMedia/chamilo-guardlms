@@ -153,20 +153,25 @@ class Adapter
                 $result['login_max_attempts'] = (int) $limit;
             }
         }
-        foreach (['debug_display' => 'display_errors', 'cookie_secure' => 'session.cookie_secure', 'cookie_httponly' => 'session.cookie_httponly'] as $key => $ini) {
-            if ($key === 'debug_display' && PHP_SAPI === 'cli') {
-                continue;
+        // CLI ini values do not establish the public web runtime's security settings.
+        if ($this->webRuntime()) {
+            foreach (['debug_display' => 'display_errors', 'cookie_secure' => 'session.cookie_secure', 'cookie_httponly' => 'session.cookie_httponly'] as $key => $ini) {
+                $value = ini_get($ini);
+                if ($value !== false) {
+                    $result[$key] = $this->boolean($value);
+                }
             }
-            $value = ini_get($ini);
-            if ($value !== false) {
-                $result[$key] = $this->boolean($value);
+            $same = ucfirst(strtolower((string) ini_get('session.cookie_samesite')));
+            if (in_array($same, ['Lax', 'Strict', 'None'], true)) {
+                $result['cookie_samesite'] = $same;
             }
-        }
-        $same = ucfirst(strtolower((string) ini_get('session.cookie_samesite')));
-        if (in_array($same, ['Lax', 'Strict', 'None'], true)) {
-            $result['cookie_samesite'] = $same;
         }
         return $result;
+    }
+
+    protected function webRuntime()
+    {
+        return PHP_SAPI !== 'cli';
     }
 
     public function inventory($includeConfig)

@@ -87,6 +87,41 @@ flock($lock, LOCK_EX);
 verify($connector->push() === ['skipped' => 'busy'], 'overlapping reporting is skipped before transport');
 flock($lock, LOCK_UN);
 fclose($lock);
+$documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? null;
+$public = sys_get_temp_dir().'/chamilo-public-'.bin2hex(random_bytes(8));
+mkdir($public, 0700);
+$_SERVER['DOCUMENT_ROOT'] = $public;
+$alias = $dir.'/public-alias';
+symlink($public, $alias);
+foreach ([$dir.'/../'.basename($public).'/data', $alias.'/data'] as $storage) {
+    putenv('CHAMILO_GUARDLMS_DATA='.$storage);
+    try {
+        new State('https://unsafe-storage.example');
+        throw new RuntimeException('Public storage accepted');
+    } catch (RuntimeException $e) {
+        verify(strpos($e->getMessage(), 'outside the public directory') !== false, 'resolved public storage rejected before writing credentials');
+    }
+}
+verify(!is_file($public.'/data/installation.key'), 'no installation key exposed through a public alias');
+unset($_SERVER['DOCUMENT_ROOT']);
+putenv('CHAMILO_GUARDLMS_DATA='.$public.'/data');
+try {
+    new State('https://unsafe-cli-storage.example', $public);
+    throw new RuntimeException('CLI public storage accepted');
+} catch (RuntimeException $e) {
+    verify(strpos($e->getMessage(), 'outside the public directory') !== false, 'native public root protects CLI storage without DOCUMENT_ROOT');
+}
+unlink($alias);
+if (is_dir($public.'/data')) {
+    rmdir($public.'/data');
+}
+rmdir($public);
+if ($documentRoot === null) {
+    unset($_SERVER['DOCUMENT_ROOT']);
+} else {
+    $_SERVER['DOCUMENT_ROOT'] = $documentRoot;
+}
+putenv('CHAMILO_GUARDLMS_DATA='.$dir);
 foreach (glob($dir.'/*') as $file) {
     unlink($file);
 } rmdir($dir);

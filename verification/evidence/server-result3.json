@@ -1,11 +1,20 @@
 {
   "major": "3",
+  "nativeDeltas": {
+    "warning": 1,
+    "fatal": 1,
+    "sql": 1
+  },
   "checks": [
     "warning preserves application response",
     "controlled native warning executed",
+    "new native warning fixture event persisted with generic redacted fields",
     "controlled native fatal executed",
+    "new native fatal fixture event persisted with generic redacted fields",
     "controlled native sql executed",
+    "new native sql fixture event persisted with generic redacted fields",
     "server reporting opt-out saved",
+    "native-delivery assertion rejects capture-disabled negative control",
     "server opt-out stops actual delivery",
     "anonymous settings refused",
     "native student login",

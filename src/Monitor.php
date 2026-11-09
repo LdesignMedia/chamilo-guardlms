@@ -128,7 +128,8 @@ final class Monitor
         }
         fseek($handle, $cursor);
         $read = 0;
-        while (!feof($handle) && $read < 1048576) {
+        // Leave unread diagnostics for the next request once capture's budget is used.
+        while (!feof($handle) && $read < 1048576 && self::$count < 20 && !self::$busy) {
             $line = fgets($handle, 16384);
             if ($line === false) {
                 break;

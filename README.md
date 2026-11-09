@@ -37,11 +37,11 @@ Run as the same service account that owns private storage:
 17 * * * * www-data /usr/local/bin/php /path/to/chamilo/public/plugin/guardlms/cli/report.php --due
 ```
 
-Use `/path/to/chamilo/plugin/guardlms/cli/report.php` on 1.11. The hourly invocation sends only when the previous accepted report is at least a day old. `--preview` prints inventory without sending; omitting `--due` sends immediately. For multiple access URLs, schedule one invocation per connected URL with `--site=https://registered-portal.example`. Only active native registry entries are accepted. Selected secondary URLs report their own plugin enabled state and encrypted credentials; native security settings whose portal context cannot be established in CLI are omitted. Send a manual web report to refresh those observations. Concurrent jobs cannot overlap. Failed requests preserve the last accepted reporting time.
+Use `/path/to/chamilo/plugin/guardlms/cli/report.php` on 1.11. The hourly invocation sends only when the previous accepted report is at least a day old. `--preview` prints inventory without sending; omitting `--due` sends immediately. For multiple access URLs, schedule one invocation per connected URL with `--site=https://registered-portal.example`. Only active native registry entries are accepted. Selected secondary URLs report their own plugin enabled state and encrypted credentials; native security settings whose portal context cannot be established in CLI are omitted. Send a manual web report to refresh those observations. Concurrent jobs cannot overlap. Failed requests and ignored stale snapshots preserve the last accepted reporting time. A stale snapshot displays a clock/retry error rather than claiming a new successful report.
 
 ## Optional monitoring
 
-Each feature defaults to **off** and can be enabled independently in the administrator page. Monitoring also requires a connected site, active GuardLMS monitoring/subscription and an allowed domain. Page analytics requires an eligible plan. The SDK owns browser consent/privacy controls and sampling; this connector does not inject user or course identifiers.
+Each feature defaults to **off** and can be enabled independently in the administrator page. Monitoring also requires a connected site, active GuardLMS monitoring/subscription and an allowed domain. Page analytics requires an eligible plan. CLI reports omit web-runtime debug and session-cookie observations because their ini values can differ from the web service; use a manual web report for those observations. The SDK owns browser consent/privacy controls and sampling; this connector does not inject user or course identifiers.
 
 For server errors, configure a trusted per-vhost canonical URL and PHP prepend file:
 
@@ -70,12 +70,15 @@ Disconnect attempts remote inventory/SDK credential revocation, then clears loca
 
 The password strength-meter setting is not evidence of server-side enforcement, so password-policy enforcement remains unknown. MFA availability and policy coverage for external identity providers also remain unknown when native evidence is absent.
 
-Chamilo plugin update availability remains unknown without an authoritative version source. Chamilo plugins never use Moodle's catalog identities. An enabled MFA setting does not prove enforcement for every account or external identity provider.
+Chamilo plugin update availability remains unknown without an authoritative version source. Chamilo plugins never use Moodle's catalog identities. Plugin vulnerability status also remains unknown until authoritative Chamilo mapping is available; supported core, runtime and dependency checks continue. An enabled MFA setting does not prove enforcement for every account or external identity provider.
 
 ## Development and verification
 
 ```sh
 php tests/unit.php
+php tests/monitor.php
+php tests/observations.php
+php tests/lifecycle.php
 find . -name '*.php' -not -path './vendor/*' -exec php -l {} \;
 scripts/package.sh
 ```
@@ -83,3 +86,5 @@ scripts/package.sh
 The private GuardLMS repository owns the real-runtime Docker/browser harness under `integrations/chamilo/docker`. See its README and verification report for exact runtimes, commands, completed checks and known gaps.
 
 Licensed under GNU GPL v3 or later.
+
+Dependency names longer than the receiver database limit (120 characters) are omitted from optional dependency inventory. Distinct installed versions remain separate observations.

@@ -9,15 +9,29 @@ final class State
     private $scope;
     private $key;
 
-    public function __construct($site)
+    public function __construct($site, $nativePublicRoot = null)
     {
         $this->dir = rtrim(getenv('CHAMILO_GUARDLMS_DATA') ?: '/var/lib/chamilo-guardlms', '/');
-        if ($this->dir[0] !== '/' || (isset($_SERVER['DOCUMENT_ROOT']) && realpath($_SERVER['DOCUMENT_ROOT']) && strpos($this->dir.'/', realpath($_SERVER['DOCUMENT_ROOT']).'/') === 0)) {
+        $publicRoots = [];
+        foreach ([$nativePublicRoot, $_SERVER['DOCUMENT_ROOT'] ?? null] as $root) {
+            if (is_string($root) && $root !== '' && ($resolvedRoot = realpath($root)) !== false) {
+                $publicRoots[] = $resolvedRoot;
+            }
+        }
+        if ($this->dir === '' || $this->dir[0] !== '/') {
             throw new \RuntimeException('GuardLMS storage must be outside the public directory.');
         }
+        $this->assertPrivateLocation($this->dir, $publicRoots);
         if (!is_dir($this->dir) && !mkdir($this->dir, 0700, true) && !is_dir($this->dir)) {
             throw new \RuntimeException('Create writable private GuardLMS storage first.');
         }
+        $resolved = realpath($this->dir);
+        if ($resolved === false) {
+            throw new \RuntimeException('GuardLMS storage must be outside the public directory.');
+        }
+        $this->assertPrivateLocation($resolved, $publicRoots);
+        // Resolve aliases before opening the installation key or any state/lock file.
+        $this->dir = $resolved;
         $this->scope = hash('sha256', rtrim($site, '/'));
         $keyfile = $this->dir.'/installation.key';
         $lock = fopen($this->dir.'/key.lock', 'c');
@@ -35,6 +49,15 @@ final class State
         } finally {
             flock($lock, LOCK_UN);
             fclose($lock);
+        }
+    }
+
+    private function assertPrivateLocation($path, array $publicRoots)
+    {
+        foreach ($publicRoots as $root) {
+            if (strpos($path.'/', $root.'/') === 0) {
+                throw new \RuntimeException('GuardLMS storage must be outside the public directory.');
+            }
         }
     }
 

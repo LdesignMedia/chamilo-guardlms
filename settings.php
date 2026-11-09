@@ -23,15 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $notice = $labels['accepted'];
                 break;
             case 'save':
-                $connector->store->update(static function ($state) {
-                    foreach (['browser_enabled', 'analytics_enabled', 'server_enabled', 'config_enabled'] as $key) {
-                        $state[$key] = isset($_POST[$key]);
-                    }
-                    if (empty($state['server_enabled'])) {
-                        unset($state['events']);
-                    }
-                    return $state;
-                });
+                $connector->saveOptions([
+                    'browser_enabled' => isset($_POST['browser_enabled']),
+                    'analytics_enabled' => isset($_POST['analytics_enabled']),
+                    'server_enabled' => isset($_POST['server_enabled']),
+                    'config_enabled' => isset($_POST['config_enabled']),
+                ]);
                 $notice = $labels['saved'];
                 break;
         }

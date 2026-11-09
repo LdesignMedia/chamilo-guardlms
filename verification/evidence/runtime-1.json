@@ -71,10 +71,7 @@
         "os_pretty": "Debian GNU/Linux 11 (bullseye)"
     },
     "security_config": {
-        "reset_token_lifetime": 3600,
-        "cookie_secure": true,
-        "cookie_httponly": true,
-        "cookie_samesite": "Lax"
+        "reset_token_lifetime": 3600
     },
     "dependency_counts": {
         "composer": 229

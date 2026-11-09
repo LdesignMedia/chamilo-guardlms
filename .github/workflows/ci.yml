@@ -17,6 +17,9 @@ jobs:
           coverage: none
       - run: find . -name '*.php' -not -path './vendor/*' -print0 | xargs -0 -n1 php -l
       - run: php tests/unit.php
+      - run: php tests/monitor.php
+      - run: php tests/observations.php
+      - run: php tests/lifecycle.php
       - run: scripts/package.sh
       - uses: actions/upload-artifact@v4
         with:
