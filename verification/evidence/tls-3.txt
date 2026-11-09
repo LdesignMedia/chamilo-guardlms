@@ -1,0 +1,1 @@
+PASS untrusted certificate rejected by actual connector HTTP client
